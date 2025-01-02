@@ -4,8 +4,8 @@ from ehrql import (
     case,
     when,
     days,
-    dataset，
-    minimum_of，
+    dataset,
+    minimum_of,
     date_diff, 
     interval, 
     codelist_from_csv
@@ -13,7 +13,6 @@ from ehrql import (
 ## Import TPP tables
 from ehrql.tables.tpp import (
     apcs, 
-    opa_diag, 
     clinical_events, 
     medications, 
     ons_deaths,
