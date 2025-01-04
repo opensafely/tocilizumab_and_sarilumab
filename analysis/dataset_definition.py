@@ -3,7 +3,7 @@ from ehrql import (
     create_dataset,
     case,
     when,
-    days,
+    days, 
     minimum_of,
     codelist_from_csv
 )
