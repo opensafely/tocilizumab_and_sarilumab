@@ -6,3 +6,10 @@ actions:
     outputs:
       highly_sensitive:
         dataset: output/input.csv
+
+  data_preparation:
+    run: stata-mp:latest analysis/data_preparation_and_descriptives.do
+    needs: [generate_dataset]
+    outputs:
+      moderately_sensitive:
+        log: logs/data_preparation.log
