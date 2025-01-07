@@ -5,7 +5,6 @@ from ehrql import (
     when,
     days,
     minimum_of,
-    codelist_from_csv
 )
 from ehrql.codes import CTV3Code
 ## Import TPP tables
@@ -14,7 +13,6 @@ from ehrql.tables.tpp import (
     clinical_events, 
     medications, 
     ons_deaths,
-    emergency_care_attendances,
     patients,
     covid_therapeutics,
     practice_registrations,
@@ -65,6 +63,10 @@ dataset.dereg_date = practice_registrations.where(
         practice_registrations.end_date.is_on_or_after(start_date)
     ).sort_by(practice_registrations.end_date).first_for_patient().end_date
 
+registered = practice_registrations.for_patient_on(start_date)
+dataset.out_date_dereg = registered.end_date
+
+
 dataset.all_hosp_discharge = apcs.where(
         apcs.admission_date.is_on_or_before(start_date)
 ).sort_by(apcs.admission_date).last_for_patient().discharge_date 
@@ -86,10 +88,10 @@ dataset.all_hosp_admission2 = apcs.where(
 dataset.sex = patients.sex
 
 ethnicity_snomed = (
-    clinical_events.where(clinical_events.snomedct_code.is_in(ethnicity_primis_snomed_codes))
+    clinical_events.where(clinical_events.snomedct_code.is_in(ethnicity_snomed_codes))
     .sort_by(clinical_events.date)
     .last_for_patient()
-    .snomedct_code.to_category(ethnicity_primis_snomed_codes))
+    .snomedct_code.to_category(ethnicity_snomed_codes))
 
 ethnicity_sus = ethnicity_from_sus.code
 

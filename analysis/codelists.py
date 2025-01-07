@@ -2,10 +2,10 @@ from ehrql import codelist_from_csv
 
 covid_icd10_codes = ["U071", "U072", "U109", "U099"]
 
-ethnicity_primis_snomed_codes = codelist_from_csv(
-  "codelists/primis-covid19-vacc-uptake-eth2001.csv",
-  column = "code",
-  category_column="grouping_6_id",
+ethnicity_snomed_codes = codelist_from_csv(
+  "codelists/opensafely-ethnicity-snomed-0removed-2e641f61.csv",
+  column = "snomedcode",
+  category_column="Grouping_6",
 )
 
 ### Solid cancer
