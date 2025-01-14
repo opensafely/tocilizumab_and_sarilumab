@@ -219,8 +219,6 @@ tab imd_quintile,m
 rename imd_quintile imd_with_missing_str
 encode  imd_with_missing_str ,gen(imd)
 replace imd=. if imd==6
-label define imd 1 "most deprived" 5 "least deprived"
-label values imd imd
 gen imd_1=(imd==1)
 gen imd_with_missing=imd
 replace imd_with_missing=9 if imd==.
