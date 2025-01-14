@@ -53,7 +53,7 @@ dataset.tocilizumab_date=tocilizumab_date
 dataset.sarilumab_date=sarilumab_date
 dataset.start_date= start_date
 dataset.age=age
-
+dataset.has_died=has_died
 
 ##outcome
 dataset.death_date = ons_deaths.date

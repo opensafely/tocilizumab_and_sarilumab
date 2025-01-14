@@ -11,5 +11,10 @@ actions:
     run: stata-mp:latest analysis/data_preparation_and_descriptives.do
     needs: [generate_dataset]
     outputs:
+      highly_sensitive:
+        dataset: output/main.dta
+        dataset: output/descriptives.xlsx
       moderately_sensitive:
         log: logs/data_preparation.log
+        output: output/descriptives.csv
+        
