@@ -21,7 +21,7 @@
 ********************************************************************************
 * Open a log file
 cap log close
-log using ./output/data_preparation, replace t
+log using ./logs/data_preparation, replace t
 clear
 
 * import dataset
