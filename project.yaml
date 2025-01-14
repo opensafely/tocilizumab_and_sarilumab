@@ -18,3 +18,13 @@ actions:
         log: logs/data_preparation.log
         output: output/descriptives.csv
         
+  cox_regression:
+    run: stata-mp:latest analysis/cox.do
+    needs: [data_preparation]
+    outputs:
+      highly_sensitive:
+        dataset: output/cox.xlsx
+      moderately_sensitive:
+        log: logs/cox.log
+        figure1: output/psgraph.svg  
+        output: output/cox.csv
