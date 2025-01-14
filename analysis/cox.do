@@ -24,7 +24,7 @@ stset end_date ,  origin(start_date) failure(failure==1)
 keep if _st==1
 
 putexcel set ./output/cox.xlsx, replace
-putexcel A1=("Model1_HR") B1=("Model1_P") C1=("Model2_HR") D1=("Model2_P") E1=("Model3_HR") F1=("Model3_P")
+putexcel A1=("Model1_HR") B1=("Model1_P") C1=("Model2_HR") D1=("Model2_P") E1=("Model3_HR") F1=("Model3_P") G1=("PH_test")
 tab failure drug,m col
 
 *stratified Cox, missing values as a separate category*
