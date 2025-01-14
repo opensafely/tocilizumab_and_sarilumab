@@ -58,8 +58,7 @@ local upper_ci = exp(b[1,1] + 1.96 * drug_se)
 local p=2 * (1 - normal(abs(b[1,1]/`drug_se')))
 putexcel E2 = "`drug_coef' (`lower_ci'-`upper_ci')"  F2="`p'"
 
-estat phtest
-putexcel G2 = "`r(p)'"
+
 *estat phtest, plot(1.drug)
 *graph export ./output/phtest_feasibility.svg, as(svg) replace
 
