@@ -26,5 +26,4 @@ actions:
         dataset: output/cox.xlsx
       moderately_sensitive:
         log: logs/cox.log
-        figure1: output/psgraph.svg  
         output: output/cox.csv
