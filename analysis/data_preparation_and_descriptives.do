@@ -361,11 +361,11 @@ forval i = 1/`=rowsof(freq)' {
         local result = round(freq[`i',2],5)
     }	
     putexcel     C`row' = "`result'"
-	if freq[`i',3] <= 7 {
+	if freq[`i',1]+freq[`i',2] <= 7 {
         local result = "<=7"
     }
     else {
-        local result = round(freq[`i',3],5)
+        local result = round(freq[`i',1]+freq[`i',2],5)
     }		
 	putexcel 	D`row' = "`result'"
     local row = `row' + 1
