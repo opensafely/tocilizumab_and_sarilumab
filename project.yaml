@@ -13,7 +13,7 @@ actions:
     outputs:
       highly_sensitive:
         dataset: output/main.dta
-        dataset: output/descriptives.xlsx
+        dataset2: output/descriptives.xlsx
       moderately_sensitive:
         log: logs/data_preparation.log
         output: output/descriptives.csv
