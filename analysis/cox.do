@@ -69,6 +69,58 @@ putexcel G2 = "`r(p)'"
 
 
 
+*propensity score weighted Cox*
+do "analysis/ado/psmatch2.ado"
+psmatch2 drug age_spline* i.sex i.region_covid_therapeutics calendar_day_spline*, logit
+gen psweight=cond( drug ==1,1/_pscore,1/(1-_pscore)) if _pscore!=.
+sum psweight,de
+by drug, sort: sum _pscore ,de
+stset end_date [pwei=psweight],  origin(start_date) failure(failure==1)
+stcox drug
+matrix b = e(b) 
+matrix se = e(V)
+local drug_coef = exp(b[1,1])
+local drug_se = sqrt(se[1,1])
+local lower_ci = exp(b[1,1] - 1.96 * drug_se)
+local upper_ci = exp(b[1,1] + 1.96 * drug_se)
+local p=2 * (1 - normal(abs(b[1,1]/`drug_se')))
+putexcel A3 = "`drug_coef' (`lower_ci'-`upper_ci')"  B3="`p'"
+
+psmatch2 drug age_spline* i.sex i.region_covid_therapeutics b6.ethnicity_with_missing b5.imd_with_missing i.vaccination_status calendar_day_spline* covid_reinfection, logit
+drop psweight
+gen psweight=cond( drug ==1,1/_pscore,1/(1-_pscore)) if _pscore!=.
+sum psweight,de
+by drug, sort: sum _pscore ,de
+stset end_date [pwei=psweight],  origin(start_date) failure(failure==1)
+stcox drug
+matrix b = e(b) 
+matrix se = e(V)
+local drug_coef = exp(b[1,1])
+local drug_se = sqrt(se[1,1])
+local lower_ci = exp(b[1,1] - 1.96 * drug_se)
+local upper_ci = exp(b[1,1] + 1.96 * drug_se)
+local p=2 * (1 - normal(abs(b[1,1]/`drug_se')))
+putexcel C3 = "`drug_coef' (`lower_ci'-`upper_ci')"  D3="`p'"
+
+psmatch2 drug age_spline* i.sex solid_cancer_ever haema_disease_ever ckd_3_5 liver_disease imid immunosupression solid_organ diabetes chronic_cardiac_disease hypertension chronic_respiratory_disease b1.bmi_g4_with_missing b6.ethnicity_with_missing b5.imd_with_missing i.vaccination_status calendar_day_spline* covid_reinfection previous_drug, logit
+histogram _pscore, by(drug, col(1))
+graph export ./output/psgraph.svg, as(svg) replace
+drop psweight
+gen psweight=cond( drug ==1,1/_pscore,1/(1-_pscore)) if _pscore!=.
+sum psweight,de
+by drug, sort: sum _pscore ,de
+*teffects ipw (failure) (drug age_spline* i.sex solid_cancer_ever haema_disease_ever ckd_3_5 liver_disease imid immunosupression solid_organ diabetes chronic_cardiac_disease hypertension chronic_respiratory_disease b1.bmi_g4_with_missing b6.ethnicity_with_missing b5.imd_with_missing i.vaccination_status calendar_day_spline* covid_reinfection previous_drug) if _pscore!=.
+*tebalance summarize
+stset end_date [pwei=psweight],  origin(start_date) failure(failure==1)
+stcox drug
+matrix b = e(b) 
+matrix se = e(V)
+local drug_coef = exp(b[1,1])
+local drug_se = sqrt(se[1,1])
+local lower_ci = exp(b[1,1] - 1.96 * drug_se)
+local upper_ci = exp(b[1,1] + 1.96 * drug_se)
+local p=2 * (1 - normal(abs(b[1,1]/`drug_se')))
+putexcel E3 = "`drug_coef' (`lower_ci'-`upper_ci')"  F3="`p'"
 
 
 
