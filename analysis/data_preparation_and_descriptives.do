@@ -100,6 +100,8 @@ gen end_date=death_date if failure==1
 replace end_date=min(study_end_date, start_date_28) if failure==0
 format %td  end_date study_end_date start_date_28
 gen failure_covid=(failure==1&death_with_covid_yes=="T")
+stset end_date ,  origin(start_date) failure(failure==1)
+keep if _st==1
 
 *secondary outcome: within 90 day*
 gen start_date_90d=start_date+90
@@ -372,6 +374,19 @@ forval i = 1/`=rowsof(freq)' {
 }
 }
 
+stset end_date ,  origin(start_date) failure(failure==1)
+keep if _st==1
+tab failure drug,m col
+*stratified Cox, missing values as a separate category*
+mkspline calendar_day_spline = calendar_day, cubic nknots(4)
+stcox drug age_spline* i.sex calendar_day_spline*, strata(region_covid_therapeutics)
+matrix b = e(b) 
+matrix se = e(V)
+local drug_coef = exp(b[1,1])
+local drug_se = sqrt(se[1,1])
+local lower_ci = exp(b[1,1] - 1.96 * drug_se)
+local upper_ci = exp(b[1,1] + 1.96 * drug_se)
+local p=2 * (1 - normal(abs(b[1,1]/`drug_se')))
   
 
 save ./output/main.dta, replace
