@@ -380,13 +380,7 @@ tab failure drug,m col
 *stratified Cox, missing values as a separate category*
 mkspline calendar_day_spline = calendar_day, cubic nknots(4)
 stcox drug age_spline* i.sex calendar_day_spline*, strata(region_covid_therapeutics)
-matrix b = e(b) 
-matrix se = e(V)
-local drug_coef = exp(b[1,1])
-local drug_se = sqrt(se[1,1])
-local lower_ci = exp(b[1,1] - 1.96 * drug_se)
-local upper_ci = exp(b[1,1] + 1.96 * drug_se)
-local p=2 * (1 - normal(abs(b[1,1]/`drug_se')))
+
   
 
 save ./output/main.dta, replace
