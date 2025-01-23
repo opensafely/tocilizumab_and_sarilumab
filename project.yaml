@@ -26,4 +26,20 @@ actions:
         dataset: output/cox.xlsx
       moderately_sensitive:
         log: logs/cox.log
-        output: output/cox.csv
+        output1: output/cox.csv
+        output2: output/psw_check.csv
+        figure1: output/phtest.svg 
+        figure2: output/psgraph.svg 
+        figure3: output/phtest_2y.svg
+
+  cox_subgroup:
+    run: stata-mp:latest analysis/cox_subgroup.do
+    needs: [data_preparation]
+    outputs:
+      highly_sensitive:
+        dataset: output/cox_subgroup.xlsx
+      moderately_sensitive:
+        log: logs/cox_subgroup.log
+        output: output/cox_subgroup.csv
+
+
