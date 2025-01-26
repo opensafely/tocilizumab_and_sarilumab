@@ -63,7 +63,7 @@ estat phtest,de
 matrix phtest=r(phtest)
 local p_phtest = phtest[1,4]
 putexcel G2 = "`p_phtest'"
-estat phtest, plot(1.drug)
+estat phtest, plot(drug)
 graph export ./output/phtest.svg, as(svg) replace
 
 
@@ -260,7 +260,7 @@ estat phtest,de
 matrix phtest=r(phtest)
 local p_phtest = phtest[1,4]
 putexcel G7 = "`p_phtest'"
-estat phtest, plot(1.drug)
+estat phtest, plot(drug)
 graph export ./output/phtest_2y.svg, as(svg) replace
 
 
