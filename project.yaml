@@ -27,7 +27,6 @@ actions:
       moderately_sensitive:
         log: logs/cox.log
         output1: output/cox.csv
-        output2: output/psw_check.csv
         figure1: output/phtest.svg 
         figure2: output/psgraph.svg 
         figure3: output/phtest_2y.svg
