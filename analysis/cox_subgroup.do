@@ -348,7 +348,7 @@ local p4= result[4,11]
 putexcel A28 = "timeband"   A29 = "timeband"  G29 = "`p1'" A30 = "timeband"  G30 = "`p2'" A31 = "timeband"  G31 = "`p3'" A32 = "timeband"  G32 = "`p4'"
 
 local row = 28
-forval i = 0/4 {
+foreach i of numlist 0 28 90 180 365 {
 stcox drug i.sex age_spline* calendar_day_spline* solid_cancer_ever haema_disease_ever ckd_3_5 liver_disease imid immunosupression solid_organ diabetes chronic_cardiac_disease hypertension chronic_respiratory_disease b1.bmi_g4_with_missing b6.ethnicity_with_missing b5.imd_with_missing i.vaccination_status  covid_reinfection previous_drug if timeband==`i', strata(region_covid_therapeutics)
 matrix result = r(table) 
 local drug_coef = result[1,1]
@@ -358,8 +358,6 @@ local p= result[4,1]
 putexcel B`row'=("`i'") E`row'=("`drug_coef' (`lower_ci'-`upper_ci')") F`row'=("`p'")
 local row = `row' + 1
 }
-
-
 
 
 
