@@ -363,8 +363,6 @@ local row = `row' + 1
 
 
 
-
-
 *additionally adjusting for time between last COVID-19 vaccination and treatment initiation, days between hospital admission and treatment initiation, and rural or urban area*
 clear
 use ./output/main.dta
@@ -394,30 +392,6 @@ local upper_ci = result[6,1]
 local p= result[4,1]
 putexcel A36 = "COVID_specific_mortality"  E36=("`drug_coef' (`lower_ci'-`upper_ci')") F36=("`p'")   
 
-
-
-*Bayesian Cox*
-stset end_date ,  origin(start_date) failure(failure==1) id(patient_id)
-keep if _st==1
-stsplit timeband, at(0(1)28)
-gen log_exposure = ln(_t - _t0) + 1
-poisson _d drug age_spline* i.sex calendar_day_spline* solid_cancer_ever haema_disease_ever ckd_3_5 liver_disease imid immunosupression solid_organ diabetes chronic_cardiac_disease hypertension chronic_respiratory_disease b1.bmi_g4_with_missing b6.ethnicity_with_missing b5.imd_with_missing i.vaccination_status covid_reinfection previous_drug i.region_covid_therapeutics i.timeband, exposure(log_exposure) cluster(id) irr
-matrix result = r(table) 
-local drug_coef = result[1,1]
-local lower_ci = result[5,1]
-local upper_ci = result[6,1]
-local p= result[4,1]
-putexcel A37 = "poisson"  E37=("`drug_coef' (`lower_ci'-`upper_ci')") F37=("`p'")   
-
-set seed 1000
-bayes, saving(poisson1,replace): poisson _d drug age_spline* i.sex calendar_day_spline* solid_cancer_ever haema_disease_ever ckd_3_5 liver_disease imid immunosupression solid_organ diabetes chronic_cardiac_disease hypertension chronic_respiratory_disease b1.bmi_g4_with_missing b6.ethnicity_with_missing b5.imd_with_missing i.vaccination_status covid_reinfection previous_drug i.region_covid_therapeutics i.timeband, exposure(log_exposure) cluster(id)
-estimates store poisson1
-bayes, saving(poisson2,replace): poisson _d age_spline* i.sex calendar_day_spline* solid_cancer_ever haema_disease_ever ckd_3_5 liver_disease imid immunosupression solid_organ diabetes chronic_cardiac_disease hypertension chronic_respiratory_disease b1.bmi_g4_with_missing b6.ethnicity_with_missing b5.imd_with_missing i.vaccination_status covid_reinfection previous_drug i.region_covid_therapeutics i.timeband, exposure(log_exposure) cluster(id)
-estimates store poisson2
-bayesstats ic poisson2 poisson1
-matrix result = r(ic) 
-local log_BF= result[2,3]
-putexcel G37=("`log_BF'")   
 
 
 
