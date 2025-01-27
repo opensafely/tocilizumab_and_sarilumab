@@ -337,7 +337,7 @@ local row = `row' + 1
 
 
 *time-vary HR*
-stset end_date ,  origin(start_date) failure(failure==1) id(patient_id)
+stset end_date_2y ,  origin(start_date) failure(failure_2y==1) id(patient_id)
 stsplit timeband, at(28,90,180,365)
 stcox c.drug##i.timeband i.sex age_spline* calendar_day_spline* solid_cancer_ever haema_disease_ever ckd_3_5 liver_disease imid immunosupression solid_organ diabetes chronic_cardiac_disease hypertension chronic_respiratory_disease b1.bmi_g4_with_missing b6.ethnicity_with_missing b5.imd_with_missing i.vaccination_status  covid_reinfection previous_drug, strata(region_covid_therapeutics) r
 matrix result = r(table) 
@@ -346,6 +346,54 @@ local p2= result[4,9]
 local p3= result[4,10]
 local p4= result[4,11]
 putexcel A28 = "timeband"   A29 = "timeband"  G29 = "`p1'" A30 = "timeband"  G30 = "`p2'" A31 = "timeband"  G31 = "`p3'" A32 = "timeband"  G32 = "`p4'"
+
+local row = 28
+foreach i of numlist 0 28 90 180 365 {
+stcox drug i.sex age_spline* calendar_day_spline* solid_cancer_ever haema_disease_ever ckd_3_5 liver_disease imid immunosupression solid_organ diabetes chronic_cardiac_disease hypertension chronic_respiratory_disease b1.bmi_g4_with_missing b6.ethnicity_with_missing b5.imd_with_missing i.vaccination_status  covid_reinfection previous_drug if timeband==`i', strata(region_covid_therapeutics)
+matrix result = r(table) 
+local drug_coef = result[1,1]
+local lower_ci = result[5,1]
+local upper_ci = result[6,1]
+local p= result[4,1]
+putexcel B`row'=("`i'") E`row'=("`drug_coef' (`lower_ci'-`upper_ci')") F`row'=("`p'")
+local row = `row' + 1
+}
+
+
+
+*MI*
+clear
+use ./output/main.dta
+
+stset end_date ,  origin(start_date) failure(failure==1)
+keep if _st==1
+*install ice package by changing ado filepath*
+sysdir
+sysdir set PLUS "analysis/ado"
+sysdir set PERSONAL "analysis/ado"
+
+set seed 1000
+
+ice m.ethnicity m.bmi_group4  m.imd   drug age_spline* calendar_day_spline* i.sex i.region_covid_therapeutics solid_cancer_ever haema_disease_ever ckd_3_5 liver_disease imid immunosupression solid_organ diabetes chronic_cardiac_disease hypertension chronic_respiratory_disease i.vaccination_status  covid_reinfection previous_drug  failure, m(5) saving(imputed,replace)  
+clear
+use imputed
+mi import ice, imputed(ethnicity bmi_group4  imd)
+mi stset end_date ,  origin(start_date) failure(failure==1)
+mi estimate, hr: stcox drug age_spline* i.sex calendar_day_spline* b6.ethnicity b5.imd  i.vaccination_status covid_reinfection, strata(region_covid_therapeutics)
+matrix result = r(table) 
+local drug_coef = result[1,1]
+local lower_ci = result[5,1]
+local upper_ci = result[6,1]
+local p= result[4,1]
+putexcel A33 = "mi"   A34 = "mi"  B33=("Model2") B34=("Model3") E33=("`drug_coef' (`lower_ci'-`upper_ci')") F33=("`p'")   
+mi estimate, hr: stcox drug age_spline* i.sex calendar_day_spline* solid_cancer_ever haema_disease_ever ckd_3_5 liver_disease imid immunosupression solid_organ diabetes chronic_cardiac_disease hypertension chronic_respiratory_disease b1.bmi_group4 b6.ethnicity b5.imd i.vaccination_status covid_reinfection previous_drug, strata(region_covid_therapeutics)
+matrix result = r(table) 
+local drug_coef = result[1,1]
+local lower_ci = result[5,1]
+local upper_ci = result[6,1]
+local p= result[4,1]
+putexcel E34=("`drug_coef' (`lower_ci'-`upper_ci')") F34=("`p'")   
+
 
 
 clear
