@@ -283,6 +283,57 @@ else {
 putexcel A13=("bmi") B13=("1") C13=("`N_sub'") D13=("`N_fail'") E13=("`drug_coef' (`lower_ci'-`upper_ci')") F13=("`p'")
 
 
+local row = 14
+foreach var in solid_cancer_ever haema_disease_ever imid  ///
+	  diabetes chronic_cardiac_disease hypertension chronic_respiratory_disease {
+stcox c.drug##c.`var' i.sex age_spline* calendar_day_spline* solid_cancer_ever haema_disease_ever ckd_3_5 liver_disease imid immunosupression solid_organ diabetes chronic_cardiac_disease hypertension chronic_respiratory_disease b1.bmi_g4_with_missing b6.ethnicity_with_missing b5.imd_with_missing i.vaccination_status  covid_reinfection previous_drug, strata(region_covid_therapeutics)
+matrix result = r(table) 
+local p= result[4,3]
+putexcel A`row' = "`var'"  G`row' = "`p'"
+
+stcox drug i.sex age_spline* calendar_day_spline* solid_cancer_ever haema_disease_ever ckd_3_5 liver_disease imid immunosupression solid_organ diabetes chronic_cardiac_disease hypertension chronic_respiratory_disease b1.bmi_g4_with_missing b6.ethnicity_with_missing b5.imd_with_missing i.vaccination_status  covid_reinfection previous_drug if `var'==0, strata(region_covid_therapeutics)
+matrix result = r(table) 
+local drug_coef = result[1,1]
+local lower_ci = result[5,1]
+local upper_ci = result[6,1]
+local p= result[4,1]
+if `e(N_sub)' <= 7 {
+        local N_sub = "<=7"
+    }
+else {
+        local N_sub = round(`e(N_sub)',5)
+    }
+if `e(N_fail)' <= 7 {
+        local N_fail = "<=7"
+    }
+else {
+        local N_fail = round(`e(N_fail)',5)
+    }
+putexcel B`row'=("0") C`row'=("`N_sub'") D`row'=("`N_fail'") E`row'=("`drug_coef' (`lower_ci'-`upper_ci')") F`row'=("`p'")
+local row = `row' + 1
+
+stcox drug i.sex age_spline* calendar_day_spline* solid_cancer_ever haema_disease_ever ckd_3_5 liver_disease imid immunosupression solid_organ diabetes chronic_cardiac_disease hypertension chronic_respiratory_disease b1.bmi_g4_with_missing b6.ethnicity_with_missing b5.imd_with_missing i.vaccination_status  covid_reinfection previous_drug if `var'==1, strata(region_covid_therapeutics)
+matrix result = r(table) 
+local drug_coef = result[1,1]
+local lower_ci = result[5,1]
+local upper_ci = result[6,1]
+local p= result[4,1]
+if `e(N_sub)' <= 7 {
+        local N_sub = "<=7"
+    }
+else {
+        local N_sub = round(`e(N_sub)',5)
+    }
+if `e(N_fail)' <= 7 {
+        local N_fail = "<=7"
+    }
+else {
+        local N_fail = round(`e(N_fail)',5)
+    }
+putexcel A`row'=("`var'") B`row'=("1") C`row'=("`N_sub'") D`row'=("`N_fail'") E`row'=("`drug_coef' (`lower_ci'-`upper_ci')") F`row'=("`p'")
+local row = `row' + 1
+}
+
 
 
 *time-vary HR*
