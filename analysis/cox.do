@@ -63,7 +63,7 @@ estat phtest,de
 matrix phtest=r(phtest)
 local p_phtest = phtest[1,4]
 putexcel G2 = "`p_phtest'"
-estat phtest, plot(drug)
+estat phtest, plot(drug) msymbol(none)
 graph export ./output/phtest.svg, as(svg) replace
 
 
@@ -102,7 +102,9 @@ local p=2 * (1 - normal(abs(b[1,1]/`drug_se')))
 putexcel C3 = "`drug_coef' (`lower_ci'-`upper_ci')"  D3="`p'"
 
 psmatch2 drug age_spline* i.sex i.region_covid_therapeutics solid_cancer_ever haema_disease_ever ckd_3_5 liver_disease imid immunosupression solid_organ diabetes chronic_cardiac_disease hypertension chronic_respiratory_disease b1.bmi_g4_with_missing b6.ethnicity_with_missing b5.imd_with_missing i.vaccination_status calendar_day_spline* covid_reinfection previous_drug, logit
-histogram _pscore, by(drug, col(1))
+kdensity _pscore if drug==0, saving(drug0)
+kdensity _pscore if drug==1, saving(drug1)
+graph combine drug0.gph drug1.gph
 graph export ./output/psgraph.svg, as(svg) replace
 drop psweight
 gen psweight=cond( drug ==1,1/_pscore,1/(1-_pscore)) if _pscore!=.
@@ -260,7 +262,7 @@ estat phtest,de
 matrix phtest=r(phtest)
 local p_phtest = phtest[1,4]
 putexcel G7 = "`p_phtest'"
-estat phtest, plot(drug)
+estat phtest, plot(drug) msymbol(none)
 graph export ./output/phtest_2y.svg, as(svg) replace
 
 
