@@ -29,7 +29,7 @@ actions:
         output1: output/cox.csv
         figure1: output/phtest.svg 
         figure2: output/psgraph.svg 
-        figure3: output/phtest_2y.svg
+       
 
   cox_subgroup:
     run: stata-mp:latest analysis/cox_subgroup.do
