@@ -45,16 +45,50 @@ foreach var of varlist tocilizumab_date sarilumab_date start_date death_date der
   }
 }
 
+putexcel set "./output/descriptives.xlsx", replace
+putexcel A1=("Variable") B1=("tocilizumab") C1=("sarilumab") D1=("total") E1=("P") F1=("group_labels") G1=("count")
+
 *exclusion*
-keep if start_date!=.
+keep if start_date>=mdy(07,01,2021)&start_date<=mdy(02,28,2022)
+count
+if r(N) <= 7 {
+        local result = "<=7"
+    }
+    else {
+        local result = round(r(N),5)
+    }
+putexcel G2="`result'"
 sum age,de
 keep if age>=18 & age<110
+count
+if r(N) <= 7 {
+        local result = "<=7"
+    }
+    else {
+        local result = round(r(N),5)
+    }
+putexcel G3="`result'"
 tab sex,m
 keep if sex=="female"|sex=="male"
 *keep if has_died==0
-drop if start_date>=death_date
 keep if region_nhs!=""|region_covid_therapeutics!=""
-keep if start_date>=mdy(07,01,2021)&start_date<=mdy(02,28,2022)
+count
+if r(N) <= 7 {
+        local result = "<=7"
+    }
+    else {
+        local result = round(r(N),5)
+    }
+putexcel G4="`result'"
+drop if start_date>=death_date
+count
+if r(N) <= 7 {
+        local result = "<=7"
+    }
+    else {
+        local result = round(r(N),5)
+    }
+putexcel G5="`result'"
 drop if tocilizumab_date==sarilumab_date
 gen drug=1 if sarilumab_date==start_date
 replace drug=0 if tocilizumab_date ==start_date
@@ -63,8 +97,6 @@ label values drug drug
 tab drug,m
 
 
-putexcel set "./output/descriptives.xlsx", replace
-putexcel A1=("Variable") B1=("tocilizumab") C1=("sarilumab") D1=("total") E1=("P") F1=("group_labels")
 count
 if r(N) <= 7 {
         local result = "<=7"
@@ -111,36 +143,6 @@ gen end_date_90d=death_date if failure_90d==1
 replace end_date_90d=min(study_end_date, start_date_90d) if failure_90d==0
 format %td  end_date_90d  start_date_90d
 gen failure_90d_covid=(failure_90d==1&death_with_covid_yes=="T")
-
-
-*secondary outcome: within 180 day*
-gen start_date_180d=start_date+180
-gen failure_180d=(death_date!=.&death_date<=min(study_end_date,start_date_180d))
-tab drug failure_180d,m
-gen end_date_180d=death_date if failure_180d==1
-replace end_date_180d=min(study_end_date, start_date_180d) if failure_180d==0
-format %td  end_date_180d  start_date_180d
-gen failure_180d_covid=(failure_180d==1&death_with_covid_yes=="T")
-
-
-*secondary outcome: within 1 year*
-gen start_date_1y=start_date+365
-gen failure_1y=(death_date!=.&death_date<=min(study_end_date,start_date_1y)) 
-tab drug failure_1y,m
-gen end_date_1y=death_date if failure_1y==1
-replace end_date_1y=min(study_end_date, start_date_1y) if failure_1y==0
-format %td  end_date_1y  start_date_1y
-gen failure_1y_covid=(failure_1y==1&death_with_covid_yes=="T")
-
-
-*secondary outcome: within 2 year*
-gen start_date_2y=start_date+365*2
-gen failure_2y=(death_date!=.&death_date<=min(study_end_date,start_date_2y))
-tab drug failure_2y,m
-gen end_date_2y=death_date if failure_2y==1
-replace end_date_2y=min(study_end_date, start_date_2y) if failure_2y==0
-format %td  end_date_2y  start_date_2y
-gen failure_2y_covid=(failure_2y==1&death_with_covid_yes=="T")
 
 
 *secondary outcome: time to discharge*
@@ -216,6 +218,7 @@ replace ethnicity=. if ethnicity_with_missing_str=="Missing"
 label values ethnicity ethnicity_with_missing
 gen White=1 if ethnicity_with_missing_str=="White"
 replace White=0 if ethnicity_with_missing_str!="White"&ethnicity!=.
+gen ethnicity_missing=(ethnicity==.)
 
 tab imd_quintile,m
 rename imd_quintile imd_with_missing_str
@@ -224,6 +227,7 @@ replace imd=. if imd==6
 gen imd_1=(imd==1)
 gen imd_with_missing=imd
 replace imd_with_missing=9 if imd==.
+gen imd_missing=(imd==.)
 
 tab region_nhs,m
 rename region_nhs region_nhs_str 
@@ -253,8 +257,8 @@ replace bmi=. if bmi<10|bmi>60
 rename bmi bmi_all
 *latest BMI within recent 10 years*
 gen bmi=bmi_all if bmi_date!=.&bmi_date>=start_date-365.25*10&(age+((bmi_date-start_date)/365.25)>=18)
-gen bmi_group4=(bmi>=18.5)+(bmi>=25.0)+(bmi>=30.0) if bmi!=.
-label define bmi 0 "underweight" 1 "normal" 2 "overweight" 3 "obese"
+gen bmi_group4=(bmi>=25)+(bmi>=30.0)+(bmi>=35.0) if bmi!=.
+label define bmi 0 "underweight/normal" 1 "overweight" 2 "obese" 3 "severely obese"
 label values bmi_group4 bmi
 gen bmi_g4_with_missing=bmi_group4
 replace bmi_g4_with_missing=9 if bmi_group4==.
@@ -286,8 +290,8 @@ replace vaccination_status=2 if covid_vaccination_count==2
 replace vaccination_status=3 if covid_vaccination_count>=3&covid_vaccination_count!=.
 label define vac 0 "Un-vaccinated" 1 "One vaccination" 2 "Two vaccinations" 3 "Three or more vaccinations"
 label values vaccination_status vac
-gen vaccination_3=1 if vaccination_status==3
-replace vaccination_3=0 if vaccination_status<3
+gen vaccination_0=1 if vaccination_status==0
+replace vaccination_0=0 if vaccination_status>0
 *Time between last vaccination and treatment*
 gen d_vaccinate_treat=start_date - last_vaccination_date
 sum d_vaccinate_treat,de
@@ -338,12 +342,12 @@ foreach var in imd covid_test_positive_date_d calendar_day d_vaccinate_treat d_a
 }
 
 local row = 11
-foreach var in sex ethnicity imd_1 rural_urban region_nhs region_covid_therapeutics age_group3 solid_cancer_ever ///
+foreach var in sex ethnicity imd rural_urban region_nhs region_covid_therapeutics age_group3 solid_cancer_ever ///
      haema_disease_ever  ckd_3_5 liver_disease imid immunosupression solid_organ ///
 	 bmi_group4 diabetes chronic_cardiac_disease hypertension chronic_respiratory_disease vaccination_status ///
-	 omicron previous_drug covid_reinfection failure failure_covid failure_90d failure_90d_covid failure_180d failure_180d_covid ///
-	 failure_1y failure_1y_covid failure_2y failure_2y_covid event_discharge discharge_missing ///
-	 covid_test_positive_date_m bmi_missing admission_missing {
+	 omicron previous_drug covid_reinfection failure failure_covid failure_90d failure_90d_covid  ///
+	  event_discharge discharge_missing ///
+	 covid_test_positive_date_m imd_missing bmi_missing ethnicity_missing admission_missing {
 
 tab `var' drug , matcell(freq) matrow(labels) chi2
 putexcel A`row' = "`var'"  E`row' = "`r(p)'"
