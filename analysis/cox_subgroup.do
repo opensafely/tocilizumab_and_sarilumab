@@ -22,7 +22,7 @@ use ./output/main.dta
 stset end_date ,  origin(start_date) failure(failure==1)
 keep if _st==1
 putexcel set ./output/cox_subgroup.xlsx, replace
-putexcel A1=("Variable") B1=("level") C1=("N") D1=("events") E1=("Model_HR") F1=("Model_P") G1=("P_interaction")
+putexcel A1=("Variable") B1=("level") C1=("N") D1=("events") E1=("Model_HR") F1=("Model_P") G1=("P_interaction") H1=("N_toci") I1=("events_toci") J1=("N_sari") K1=("events_sari")
 
 stcox i.drug##i.omicron age_spline* i.sex solid_cancer_ever haema_disease_ever ckd_3_5 liver_disease imid immunosupression solid_organ diabetes chronic_cardiac_disease hypertension chronic_respiratory_disease b1.bmi_g4_with_missing b6.ethnicity_with_missing b5.imd_with_missing i.vaccination_status  covid_reinfection previous_drug, strata(region_covid_therapeutics)
 matrix result = r(table) 
@@ -46,7 +46,37 @@ if `e(N_fail)' <= 7 {
 else {
         local N_fail = round(`e(N_fail)',5)
     }
-putexcel B2=("0") C2=("`N_sub'") D2=("`N_fail'") E2=("`drug_coef' (`lower_ci'-`upper_ci')") F2=("`p'")
+count if _st==1&drug==0
+if r(N) <= 7 {
+        local N_toci = "<=7"
+    }
+else {
+        local N_toci = round(r(N),5)
+    }
+count if _st==1&drug==1
+if r(N) <= 7 {
+        local N_sari = "<=7"
+    }
+else {
+        local N_sari = round(r(N),5)
+    }
+count if _st==1&_d==1&drug==0
+if r(N) <= 7 {
+        local d_toci = "<=7"
+    }
+else {
+        local d_toci = round(r(N),5)
+    }
+count if _st==1&_d==1&drug==1
+if r(N) <= 7 {
+        local d_sari = "<=7"
+    }
+else {
+        local d_sari = round(r(N),5)
+    }
+putexcel B2=("0") C2=("`N_sub'") D2=("`N_fail'") E2=("`drug_coef' (`lower_ci'-`upper_ci')") F2=("`p'") H2=("`N_toci'") I2=("`d_toci'") J2=("`N_sari'") K2=("`d_sari'") 
+
+
 stcox drug age_spline* i.sex solid_cancer_ever haema_disease_ever ckd_3_5 liver_disease imid immunosupression solid_organ diabetes chronic_cardiac_disease hypertension chronic_respiratory_disease b1.bmi_g4_with_missing b6.ethnicity_with_missing b5.imd_with_missing i.vaccination_status  covid_reinfection previous_drug if omicron==1, strata(region_covid_therapeutics)
 matrix result = r(table) 
 local drug_coef = result[1,1]
@@ -65,7 +95,35 @@ if `e(N_fail)' <= 7 {
 else {
         local N_fail = round(`e(N_fail)',5)
     }
-putexcel A3=("omicron") B3=("1") C3=("`N_sub'") D3=("`N_fail'") E3=("`drug_coef' (`lower_ci'-`upper_ci')") F3=("`p'")
+count if _st==1&drug==0
+if r(N) <= 7 {
+        local N_toci = "<=7"
+    }
+else {
+        local N_toci = round(r(N),5)
+    }
+count if _st==1&drug==1
+if r(N) <= 7 {
+        local N_sari = "<=7"
+    }
+else {
+        local N_sari = round(r(N),5)
+    }
+count if _st==1&_d==1&drug==0
+if r(N) <= 7 {
+        local d_toci = "<=7"
+    }
+else {
+        local d_toci = round(r(N),5)
+    }
+count if _st==1&_d==1&drug==1
+if r(N) <= 7 {
+        local d_sari = "<=7"
+    }
+else {
+        local d_sari = round(r(N),5)
+    }
+putexcel A3=("omicron") B3=("1") C3=("`N_sub'") D3=("`N_fail'") E3=("`drug_coef' (`lower_ci'-`upper_ci')") F3=("`p'") H3=("`N_toci'") I3=("`d_toci'") J3=("`N_sari'") K3=("`d_sari'") 
 
 stcox i.drug##i.sex age_spline* calendar_day_spline* solid_cancer_ever haema_disease_ever ckd_3_5 liver_disease imid immunosupression solid_organ diabetes chronic_cardiac_disease hypertension chronic_respiratory_disease b1.bmi_g4_with_missing b6.ethnicity_with_missing b5.imd_with_missing i.vaccination_status  covid_reinfection previous_drug, strata(region_covid_therapeutics)
 matrix result = r(table) 
@@ -89,7 +147,35 @@ if `e(N_fail)' <= 7 {
 else {
         local N_fail = round(`e(N_fail)',5)
     }
-putexcel B4=("0") C4=("`N_sub'") D4=("`N_fail'") E4=("`drug_coef' (`lower_ci'-`upper_ci')") F4=("`p'")
+count if _st==1&drug==0
+if r(N) <= 7 {
+        local N_toci = "<=7"
+    }
+else {
+        local N_toci = round(r(N),5)
+    }
+count if _st==1&drug==1
+if r(N) <= 7 {
+        local N_sari = "<=7"
+    }
+else {
+        local N_sari = round(r(N),5)
+    }
+count if _st==1&_d==1&drug==0
+if r(N) <= 7 {
+        local d_toci = "<=7"
+    }
+else {
+        local d_toci = round(r(N),5)
+    }
+count if _st==1&_d==1&drug==1
+if r(N) <= 7 {
+        local d_sari = "<=7"
+    }
+else {
+        local d_sari = round(r(N),5)
+    }
+putexcel B4=("0") C4=("`N_sub'") D4=("`N_fail'") E4=("`drug_coef' (`lower_ci'-`upper_ci')") F4=("`p'") H4=("`N_toci'") I4=("`d_toci'") J4=("`N_sari'") K4=("`d_sari'") 
 stcox drug  age_spline* calendar_day_spline* solid_cancer_ever haema_disease_ever ckd_3_5 liver_disease imid immunosupression solid_organ diabetes chronic_cardiac_disease hypertension chronic_respiratory_disease b1.bmi_g4_with_missing b6.ethnicity_with_missing b5.imd_with_missing i.vaccination_status  covid_reinfection previous_drug if sex==1, strata(region_covid_therapeutics)
 matrix result = r(table) 
 local drug_coef = result[1,1]
@@ -108,7 +194,35 @@ if `e(N_fail)' <= 7 {
 else {
         local N_fail = round(`e(N_fail)',5)
     }
-putexcel A5=("sex") B5=("1") C5=("`N_sub'") D5=("`N_fail'") E5=("`drug_coef' (`lower_ci'-`upper_ci')") F5=("`p'")
+count if _st==1&drug==0
+if r(N) <= 7 {
+        local N_toci = "<=7"
+    }
+else {
+        local N_toci = round(r(N),5)
+    }
+count if _st==1&drug==1
+if r(N) <= 7 {
+        local N_sari = "<=7"
+    }
+else {
+        local N_sari = round(r(N),5)
+    }
+count if _st==1&_d==1&drug==0
+if r(N) <= 7 {
+        local d_toci = "<=7"
+    }
+else {
+        local d_toci = round(r(N),5)
+    }
+count if _st==1&_d==1&drug==1
+if r(N) <= 7 {
+        local d_sari = "<=7"
+    }
+else {
+        local d_sari = round(r(N),5)
+    }
+putexcel A5=("sex") B5=("1") C5=("`N_sub'") D5=("`N_fail'") E5=("`drug_coef' (`lower_ci'-`upper_ci')") F5=("`p'") H5=("`N_toci'") I5=("`d_toci'") J5=("`N_sari'") K5=("`d_sari'") 
 
 stcox i.drug##i.age_60 i.sex calendar_day_spline* solid_cancer_ever haema_disease_ever ckd_3_5 liver_disease imid immunosupression solid_organ diabetes chronic_cardiac_disease hypertension chronic_respiratory_disease b1.bmi_g4_with_missing b6.ethnicity_with_missing b5.imd_with_missing i.vaccination_status  covid_reinfection previous_drug, strata(region_covid_therapeutics)
 matrix result = r(table) 
@@ -132,7 +246,35 @@ if `e(N_fail)' <= 7 {
 else {
         local N_fail = round(`e(N_fail)',5)
     }
-putexcel B6=("0") C6=("`N_sub'") D6=("`N_fail'") E6=("`drug_coef' (`lower_ci'-`upper_ci')") F6=("`p'")
+count if _st==1&drug==0
+if r(N) <= 7 {
+        local N_toci = "<=7"
+    }
+else {
+        local N_toci = round(r(N),5)
+    }
+count if _st==1&drug==1
+if r(N) <= 7 {
+        local N_sari = "<=7"
+    }
+else {
+        local N_sari = round(r(N),5)
+    }
+count if _st==1&_d==1&drug==0
+if r(N) <= 7 {
+        local d_toci = "<=7"
+    }
+else {
+        local d_toci = round(r(N),5)
+    }
+count if _st==1&_d==1&drug==1
+if r(N) <= 7 {
+        local d_sari = "<=7"
+    }
+else {
+        local d_sari = round(r(N),5)
+    }
+putexcel B6=("0") C6=("`N_sub'") D6=("`N_fail'") E6=("`drug_coef' (`lower_ci'-`upper_ci')") F6=("`p'") H6=("`N_toci'") I6=("`d_toci'") J6=("`N_sari'") K6=("`d_sari'") 
 stcox drug i.sex calendar_day_spline* solid_cancer_ever haema_disease_ever ckd_3_5 liver_disease imid immunosupression solid_organ diabetes chronic_cardiac_disease hypertension chronic_respiratory_disease b1.bmi_g4_with_missing b6.ethnicity_with_missing b5.imd_with_missing i.vaccination_status  covid_reinfection previous_drug if age_60==1, strata(region_covid_therapeutics)
 matrix result = r(table) 
 local drug_coef = result[1,1]
@@ -151,7 +293,35 @@ if `e(N_fail)' <= 7 {
 else {
         local N_fail = round(`e(N_fail)',5)
     }
-putexcel A7=("age") B7=("1") C7=("`N_sub'") D7=("`N_fail'") E7=("`drug_coef' (`lower_ci'-`upper_ci')") F7=("`p'")
+count if _st==1&drug==0
+if r(N) <= 7 {
+        local N_toci = "<=7"
+    }
+else {
+        local N_toci = round(r(N),5)
+    }
+count if _st==1&drug==1
+if r(N) <= 7 {
+        local N_sari = "<=7"
+    }
+else {
+        local N_sari = round(r(N),5)
+    }
+count if _st==1&_d==1&drug==0
+if r(N) <= 7 {
+        local d_toci = "<=7"
+    }
+else {
+        local d_toci = round(r(N),5)
+    }
+count if _st==1&_d==1&drug==1
+if r(N) <= 7 {
+        local d_sari = "<=7"
+    }
+else {
+        local d_sari = round(r(N),5)
+    }
+putexcel A7=("age") B7=("1") C7=("`N_sub'") D7=("`N_fail'") E7=("`drug_coef' (`lower_ci'-`upper_ci')") F7=("`p'") H7=("`N_toci'") I7=("`d_toci'") J7=("`N_sari'") K7=("`d_sari'") 
 
 stcox i.drug##i.White i.sex age_spline* calendar_day_spline* solid_cancer_ever haema_disease_ever ckd_3_5 liver_disease imid immunosupression solid_organ diabetes chronic_cardiac_disease hypertension chronic_respiratory_disease b1.bmi_g4_with_missing b5.imd_with_missing i.vaccination_status  covid_reinfection previous_drug, strata(region_covid_therapeutics)
 matrix result = r(table) 
@@ -175,7 +345,35 @@ if `e(N_fail)' <= 7 {
 else {
         local N_fail = round(`e(N_fail)',5)
     }
-putexcel B8=("0") C8=("`N_sub'") D8=("`N_fail'") E8=("`drug_coef' (`lower_ci'-`upper_ci')") F8=("`p'")
+count if _st==1&drug==0
+if r(N) <= 7 {
+        local N_toci = "<=7"
+    }
+else {
+        local N_toci = round(r(N),5)
+    }
+count if _st==1&drug==1
+if r(N) <= 7 {
+        local N_sari = "<=7"
+    }
+else {
+        local N_sari = round(r(N),5)
+    }
+count if _st==1&_d==1&drug==0
+if r(N) <= 7 {
+        local d_toci = "<=7"
+    }
+else {
+        local d_toci = round(r(N),5)
+    }
+count if _st==1&_d==1&drug==1
+if r(N) <= 7 {
+        local d_sari = "<=7"
+    }
+else {
+        local d_sari = round(r(N),5)
+    }
+putexcel B8=("0") C8=("`N_sub'") D8=("`N_fail'") E8=("`drug_coef' (`lower_ci'-`upper_ci')") F8=("`p'") H8=("`N_toci'") I8=("`d_toci'") J8=("`N_sari'") K8=("`d_sari'") 
 stcox drug i.sex age_spline* calendar_day_spline* solid_cancer_ever haema_disease_ever ckd_3_5 liver_disease imid immunosupression solid_organ diabetes chronic_cardiac_disease hypertension chronic_respiratory_disease b1.bmi_g4_with_missing b5.imd_with_missing i.vaccination_status  covid_reinfection previous_drug if White==1, strata(region_covid_therapeutics)
 matrix result = r(table) 
 local drug_coef = result[1,1]
@@ -194,13 +392,41 @@ if `e(N_fail)' <= 7 {
 else {
         local N_fail = round(`e(N_fail)',5)
     }
-putexcel A9=("White") B9=("1") C9=("`N_sub'") D9=("`N_fail'") E9=("`drug_coef' (`lower_ci'-`upper_ci')") F9=("`p'")
+count if _st==1&drug==0
+if r(N) <= 7 {
+        local N_toci = "<=7"
+    }
+else {
+        local N_toci = round(r(N),5)
+    }
+count if _st==1&drug==1
+if r(N) <= 7 {
+        local N_sari = "<=7"
+    }
+else {
+        local N_sari = round(r(N),5)
+    }
+count if _st==1&_d==1&drug==0
+if r(N) <= 7 {
+        local d_toci = "<=7"
+    }
+else {
+        local d_toci = round(r(N),5)
+    }
+count if _st==1&_d==1&drug==1
+if r(N) <= 7 {
+        local d_sari = "<=7"
+    }
+else {
+        local d_sari = round(r(N),5)
+    }
+putexcel A9=("White") B9=("1") C9=("`N_sub'") D9=("`N_fail'") E9=("`drug_coef' (`lower_ci'-`upper_ci')") F9=("`p'") H9=("`N_toci'") I9=("`d_toci'") J9=("`N_sari'") K9=("`d_sari'") 
 
-stcox i.drug##i.vaccination_3 i.sex age_spline* calendar_day_spline* solid_cancer_ever haema_disease_ever ckd_3_5 liver_disease imid immunosupression solid_organ diabetes chronic_cardiac_disease hypertension chronic_respiratory_disease b1.bmi_g4_with_missing b6.ethnicity_with_missing b5.imd_with_missing  covid_reinfection previous_drug, strata(region_covid_therapeutics)
+stcox i.drug##i.vaccination_0 i.sex age_spline* calendar_day_spline* solid_cancer_ever haema_disease_ever ckd_3_5 liver_disease imid immunosupression solid_organ diabetes chronic_cardiac_disease hypertension chronic_respiratory_disease b1.bmi_g4_with_missing b6.ethnicity_with_missing b5.imd_with_missing  covid_reinfection previous_drug, strata(region_covid_therapeutics)
 matrix result = r(table) 
 local p= result[4,8]
 putexcel A10=("vac")  G10=("`p'") 
-stcox drug i.sex age_spline* calendar_day_spline* solid_cancer_ever haema_disease_ever ckd_3_5 liver_disease imid immunosupression solid_organ diabetes chronic_cardiac_disease hypertension chronic_respiratory_disease b1.bmi_g4_with_missing b6.ethnicity_with_missing b5.imd_with_missing  covid_reinfection previous_drug if vaccination_3==0, strata(region_covid_therapeutics)
+stcox drug i.sex age_spline* calendar_day_spline* solid_cancer_ever haema_disease_ever ckd_3_5 liver_disease imid immunosupression solid_organ diabetes chronic_cardiac_disease hypertension chronic_respiratory_disease b1.bmi_g4_with_missing b6.ethnicity_with_missing b5.imd_with_missing  covid_reinfection previous_drug if vaccination_0==0, strata(region_covid_therapeutics)
 matrix result = r(table) 
 local drug_coef = result[1,1]
 local lower_ci = result[5,1]
@@ -218,8 +444,36 @@ if `e(N_fail)' <= 7 {
 else {
         local N_fail = round(`e(N_fail)',5)
     }
-putexcel B10=("0") C10=("`N_sub'") D10=("`N_fail'") E10=("`drug_coef' (`lower_ci'-`upper_ci')") F10=("`p'")
-stcox drug i.sex age_spline* calendar_day_spline* solid_cancer_ever haema_disease_ever ckd_3_5 liver_disease imid immunosupression solid_organ diabetes chronic_cardiac_disease hypertension chronic_respiratory_disease b1.bmi_g4_with_missing b6.ethnicity_with_missing b5.imd_with_missing  covid_reinfection previous_drug if vaccination_3==1, strata(region_covid_therapeutics)
+count if _st==1&drug==0
+if r(N) <= 7 {
+        local N_toci = "<=7"
+    }
+else {
+        local N_toci = round(r(N),5)
+    }
+count if _st==1&drug==1
+if r(N) <= 7 {
+        local N_sari = "<=7"
+    }
+else {
+        local N_sari = round(r(N),5)
+    }
+count if _st==1&_d==1&drug==0
+if r(N) <= 7 {
+        local d_toci = "<=7"
+    }
+else {
+        local d_toci = round(r(N),5)
+    }
+count if _st==1&_d==1&drug==1
+if r(N) <= 7 {
+        local d_sari = "<=7"
+    }
+else {
+        local d_sari = round(r(N),5)
+    }
+putexcel B10=("0") C10=("`N_sub'") D10=("`N_fail'") E10=("`drug_coef' (`lower_ci'-`upper_ci')") F10=("`p'") H10=("`N_toci'") I10=("`d_toci'") J10=("`N_sari'") K10=("`d_sari'") 
+stcox drug i.sex age_spline* calendar_day_spline* solid_cancer_ever haema_disease_ever ckd_3_5 liver_disease imid immunosupression solid_organ diabetes chronic_cardiac_disease hypertension chronic_respiratory_disease b1.bmi_g4_with_missing b6.ethnicity_with_missing b5.imd_with_missing  covid_reinfection previous_drug if vaccination_0==1, strata(region_covid_therapeutics)
 matrix result = r(table) 
 local drug_coef = result[1,1]
 local lower_ci = result[5,1]
@@ -237,7 +491,35 @@ if `e(N_fail)' <= 7 {
 else {
         local N_fail = round(`e(N_fail)',5)
     }
-putexcel A11=("vac") B11=("1") C11=("`N_sub'") D11=("`N_fail'") E11=("`drug_coef' (`lower_ci'-`upper_ci')") F11=("`p'")
+count if _st==1&drug==0
+if r(N) <= 7 {
+        local N_toci = "<=7"
+    }
+else {
+        local N_toci = round(r(N),5)
+    }
+count if _st==1&drug==1
+if r(N) <= 7 {
+        local N_sari = "<=7"
+    }
+else {
+        local N_sari = round(r(N),5)
+    }
+count if _st==1&_d==1&drug==0
+if r(N) <= 7 {
+        local d_toci = "<=7"
+    }
+else {
+        local d_toci = round(r(N),5)
+    }
+count if _st==1&_d==1&drug==1
+if r(N) <= 7 {
+        local d_sari = "<=7"
+    }
+else {
+        local d_sari = round(r(N),5)
+    }
+putexcel A11=("vac") B11=("1") C11=("`N_sub'") D11=("`N_fail'") E11=("`drug_coef' (`lower_ci'-`upper_ci')") F11=("`p'") H11=("`N_toci'") I11=("`d_toci'") J11=("`N_sari'") K11=("`d_sari'") 
 
 stcox i.drug##i.bmi_30 i.sex age_spline* calendar_day_spline* solid_cancer_ever haema_disease_ever ckd_3_5 liver_disease imid immunosupression solid_organ diabetes chronic_cardiac_disease hypertension chronic_respiratory_disease  b6.ethnicity_with_missing b5.imd_with_missing i.vaccination_status  covid_reinfection previous_drug, strata(region_covid_therapeutics)
 matrix result = r(table) 
@@ -261,7 +543,35 @@ if `e(N_fail)' <= 7 {
 else {
         local N_fail = round(`e(N_fail)',5)
     }
-putexcel B12=("0") C12=("`N_sub'") D12=("`N_fail'") E12=("`drug_coef' (`lower_ci'-`upper_ci')") F12=("`p'")
+count if _st==1&drug==0
+if r(N) <= 7 {
+        local N_toci = "<=7"
+    }
+else {
+        local N_toci = round(r(N),5)
+    }
+count if _st==1&drug==1
+if r(N) <= 7 {
+        local N_sari = "<=7"
+    }
+else {
+        local N_sari = round(r(N),5)
+    }
+count if _st==1&_d==1&drug==0
+if r(N) <= 7 {
+        local d_toci = "<=7"
+    }
+else {
+        local d_toci = round(r(N),5)
+    }
+count if _st==1&_d==1&drug==1
+if r(N) <= 7 {
+        local d_sari = "<=7"
+    }
+else {
+        local d_sari = round(r(N),5)
+    }
+putexcel B12=("0") C12=("`N_sub'") D12=("`N_fail'") E12=("`drug_coef' (`lower_ci'-`upper_ci')") F12=("`p'") H12=("`N_toci'") I12=("`d_toci'") J12=("`N_sari'") K12=("`d_sari'") 
 stcox drug i.sex age_spline* calendar_day_spline* solid_cancer_ever haema_disease_ever ckd_3_5 liver_disease imid immunosupression solid_organ diabetes chronic_cardiac_disease hypertension chronic_respiratory_disease  b6.ethnicity_with_missing b5.imd_with_missing i.vaccination_status  covid_reinfection previous_drug if bmi_30==1, strata(region_covid_therapeutics)
 matrix result = r(table) 
 local drug_coef = result[1,1]
@@ -280,7 +590,35 @@ if `e(N_fail)' <= 7 {
 else {
         local N_fail = round(`e(N_fail)',5)
     }
-putexcel A13=("bmi") B13=("1") C13=("`N_sub'") D13=("`N_fail'") E13=("`drug_coef' (`lower_ci'-`upper_ci')") F13=("`p'")
+count if _st==1&drug==0
+if r(N) <= 7 {
+        local N_toci = "<=7"
+    }
+else {
+        local N_toci = round(r(N),5)
+    }
+count if _st==1&drug==1
+if r(N) <= 7 {
+        local N_sari = "<=7"
+    }
+else {
+        local N_sari = round(r(N),5)
+    }
+count if _st==1&_d==1&drug==0
+if r(N) <= 7 {
+        local d_toci = "<=7"
+    }
+else {
+        local d_toci = round(r(N),5)
+    }
+count if _st==1&_d==1&drug==1
+if r(N) <= 7 {
+        local d_sari = "<=7"
+    }
+else {
+        local d_sari = round(r(N),5)
+    }
+putexcel A13=("bmi") B13=("1") C13=("`N_sub'") D13=("`N_fail'") E13=("`drug_coef' (`lower_ci'-`upper_ci')") F13=("`p'") H13=("`N_toci'") I13=("`d_toci'") J13=("`N_sari'") K13=("`d_sari'") 
 
 
 local row = 14
@@ -309,7 +647,35 @@ if `e(N_fail)' <= 7 {
 else {
         local N_fail = round(`e(N_fail)',5)
     }
-putexcel B`row'=("0") C`row'=("`N_sub'") D`row'=("`N_fail'") E`row'=("`drug_coef' (`lower_ci'-`upper_ci')") F`row'=("`p'")
+count if _st==1&drug==0
+if r(N) <= 7 {
+        local N_toci = "<=7"
+    }
+else {
+        local N_toci = round(r(N),5)
+    }
+count if _st==1&drug==1
+if r(N) <= 7 {
+        local N_sari = "<=7"
+    }
+else {
+        local N_sari = round(r(N),5)
+    }
+count if _st==1&_d==1&drug==0
+if r(N) <= 7 {
+        local d_toci = "<=7"
+    }
+else {
+        local d_toci = round(r(N),5)
+    }
+count if _st==1&_d==1&drug==1
+if r(N) <= 7 {
+        local d_sari = "<=7"
+    }
+else {
+        local d_sari = round(r(N),5)
+    }
+putexcel B`row'=("0") C`row'=("`N_sub'") D`row'=("`N_fail'") E`row'=("`drug_coef' (`lower_ci'-`upper_ci')") F`row'=("`p'") H`row'=("`N_toci'") I`row'=("`d_toci'") J`row'=("`N_sari'") K`row'=("`d_sari'") 
 local row = `row' + 1
 
 stcox drug i.sex age_spline* calendar_day_spline* solid_cancer_ever haema_disease_ever ckd_3_5 liver_disease imid immunosupression solid_organ diabetes chronic_cardiac_disease hypertension chronic_respiratory_disease b1.bmi_g4_with_missing b6.ethnicity_with_missing b5.imd_with_missing i.vaccination_status  covid_reinfection previous_drug if `var'==1, strata(region_covid_therapeutics)
@@ -330,34 +696,38 @@ if `e(N_fail)' <= 7 {
 else {
         local N_fail = round(`e(N_fail)',5)
     }
-putexcel A`row'=("`var'") B`row'=("1") C`row'=("`N_sub'") D`row'=("`N_fail'") E`row'=("`drug_coef' (`lower_ci'-`upper_ci')") F`row'=("`p'")
+count if _st==1&drug==0
+if r(N) <= 7 {
+        local N_toci = "<=7"
+    }
+else {
+        local N_toci = round(r(N),5)
+    }
+count if _st==1&drug==1
+if r(N) <= 7 {
+        local N_sari = "<=7"
+    }
+else {
+        local N_sari = round(r(N),5)
+    }
+count if _st==1&_d==1&drug==0
+if r(N) <= 7 {
+        local d_toci = "<=7"
+    }
+else {
+        local d_toci = round(r(N),5)
+    }
+count if _st==1&_d==1&drug==1
+if r(N) <= 7 {
+        local d_sari = "<=7"
+    }
+else {
+        local d_sari = round(r(N),5)
+    }
+putexcel A`row'=("`var'") B`row'=("1") C`row'=("`N_sub'") D`row'=("`N_fail'") E`row'=("`drug_coef' (`lower_ci'-`upper_ci')") F`row'=("`p'") H`row'=("`N_toci'") I`row'=("`d_toci'") J`row'=("`N_sari'") K`row'=("`d_sari'") 
 local row = `row' + 1
 }
 
-
-
-*time-vary HR*
-stset end_date_2y ,  origin(start_date) failure(failure_2y==1) id(patient_id)
-stsplit timeband, at(28,90,180,365)
-stcox c.drug##i.timeband i.sex age_spline* calendar_day_spline* solid_cancer_ever haema_disease_ever ckd_3_5 liver_disease imid immunosupression solid_organ diabetes chronic_cardiac_disease hypertension chronic_respiratory_disease b1.bmi_g4_with_missing b6.ethnicity_with_missing b5.imd_with_missing i.vaccination_status  covid_reinfection previous_drug, strata(region_covid_therapeutics) r
-matrix result = r(table) 
-local p1= result[4,8]
-local p2= result[4,9]
-local p3= result[4,10]
-local p4= result[4,11]
-putexcel A28 = "timeband"   A29 = "timeband"  G29 = "`p1'" A30 = "timeband"  G30 = "`p2'" A31 = "timeband"  G31 = "`p3'" A32 = "timeband"  G32 = "`p4'"
-
-local row = 28
-foreach i of numlist 0 28 90 180 365 {
-stcox drug i.sex age_spline* calendar_day_spline* solid_cancer_ever haema_disease_ever ckd_3_5 liver_disease imid immunosupression solid_organ diabetes chronic_cardiac_disease hypertension chronic_respiratory_disease b1.bmi_g4_with_missing b6.ethnicity_with_missing b5.imd_with_missing i.vaccination_status  covid_reinfection previous_drug if timeband==`i', strata(region_covid_therapeutics)
-matrix result = r(table) 
-local drug_coef = result[1,1]
-local lower_ci = result[5,1]
-local upper_ci = result[6,1]
-local p= result[4,1]
-putexcel B`row'=("`i'") E`row'=("`drug_coef' (`lower_ci'-`upper_ci')") F`row'=("`p'")
-local row = `row' + 1
-}
 
 
 
@@ -385,14 +755,14 @@ local drug_coef = result[1,1]
 local lower_ci = result[5,1]
 local upper_ci = result[6,1]
 local p= result[4,1]
-putexcel A33 = "mi"   A34 = "mi"  B33=("Model2") B34=("Model3") E33=("`drug_coef' (`lower_ci'-`upper_ci')") F33=("`p'")   
+putexcel A28 = "mi"   A29 = "mi"  B28=("Model2") B39=("Model3") E28=("`drug_coef' (`lower_ci'-`upper_ci')") F28=("`p'")   
 mi estimate, hr: stcox drug age_spline* i.sex calendar_day_spline* solid_cancer_ever haema_disease_ever ckd_3_5 liver_disease imid immunosupression solid_organ diabetes chronic_cardiac_disease hypertension chronic_respiratory_disease b1.bmi_group4 b6.ethnicity b5.imd i.vaccination_status covid_reinfection previous_drug, strata(region_covid_therapeutics)
 matrix result = r(table) 
 local drug_coef = result[1,1]
 local lower_ci = result[5,1]
 local upper_ci = result[6,1]
 local p= result[4,1]
-putexcel E34=("`drug_coef' (`lower_ci'-`upper_ci')") F34=("`p'")   
+putexcel E29=("`drug_coef' (`lower_ci'-`upper_ci')") F29=("`p'")   
 
 
 
@@ -411,7 +781,7 @@ local drug_coef = result[1,1]
 local lower_ci = result[5,1]
 local upper_ci = result[6,1]
 local p= result[4,1]
-putexcel A35 = "add_adjust"  E35=("`drug_coef' (`lower_ci'-`upper_ci')") F35=("`p'")   
+putexcel A30 = "add_adjust"  E30=("`drug_coef' (`lower_ci'-`upper_ci')") F30=("`p'")   
 
 
 *COVID-specific mortality*
@@ -423,7 +793,7 @@ local drug_coef = result[1,1]
 local lower_ci = result[5,1]
 local upper_ci = result[6,1]
 local p= result[4,1]
-putexcel A36 = "COVID_specific_mortality"  E36=("`drug_coef' (`lower_ci'-`upper_ci')") F36=("`p'")   
+putexcel A31 = "COVID_specific_mortality"  E31=("`drug_coef' (`lower_ci'-`upper_ci')") F31=("`p'")   
 
 
 
@@ -438,7 +808,7 @@ local drug_coef = result[1,1]
 local lower_ci = result[5,1]
 local upper_ci = result[6,1]
 local p= result[4,1]
-putexcel A37 = "poisson"  E37=("`drug_coef' (`lower_ci'-`upper_ci')") F37=("`p'")   
+putexcel A32 = "poisson"  E32=("`drug_coef' (`lower_ci'-`upper_ci')") F32=("`p'")   
 
 set seed 1000
 bayes, saving(poisson1,replace): poisson _d drug age_spline* i.sex calendar_day_spline* solid_cancer_ever haema_disease_ever ckd_3_5 liver_disease imid immunosupression solid_organ diabetes chronic_cardiac_disease hypertension chronic_respiratory_disease b1.bmi_g4_with_missing b6.ethnicity_with_missing b5.imd_with_missing i.vaccination_status covid_reinfection previous_drug i.region_covid_therapeutics i.timeband, exposure(log_exposure) cluster(patient_id)
@@ -448,7 +818,7 @@ estimates store poisson2
 bayesstats ic poisson2 poisson1
 matrix result = r(ic) 
 local log_BF= result[2,3]
-putexcel G37=("`log_BF'")   
+putexcel G32=(`log_BF')   
 
 
 
