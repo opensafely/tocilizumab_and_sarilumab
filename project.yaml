@@ -41,6 +41,16 @@ actions:
         log: logs/cox_subgroup.log
         output: output/cox_subgroup.csv
 
+  cox_subgroup2:
+    run: stata-mp:latest analysis/cox_subgroup2.do
+    needs: [data_preparation]
+    outputs:
+      highly_sensitive:
+        dataset: output/cox_subgroup2.xlsx
+      moderately_sensitive:
+        log: logs/cox_subgroup2.log
+        output: output/cox_subgroup2.csv
+        
   psw_check:
     run: stata-mp:latest analysis/psw_check.do
     needs: [data_preparation]
