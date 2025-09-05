@@ -37,9 +37,9 @@ local p= result[4,1]
 putexcel A32 = "poisson"  B32=("`drug_coef' (`lower_ci'-`upper_ci')") C32=("`p'")   
 
 set seed 1000
-bayes, saving(poisson1,replace): poisson _d drug age_spline* i.sex calendar_day_spline* solid_cancer_ever haema_disease_ever ckd_3_5 liver_disease imid immunosupression solid_organ diabetes chronic_cardiac_disease hypertension chronic_respiratory_disease b1.bmi_g4_with_missing b6.ethnicity_with_missing b5.imd_with_missing i.vaccination_status covid_reinfection previous_drug i.region_covid_therapeutics ibn.interval, exposure(log_exposure) noconstant 
+bayes, prior({_d:}, normal(0,5)) saving(poisson1,replace): poisson _d drug age_spline* i.sex calendar_day_spline* solid_cancer_ever haema_disease_ever ckd_3_5 liver_disease imid immunosupression solid_organ diabetes chronic_cardiac_disease hypertension chronic_respiratory_disease b1.bmi_g4_with_missing b6.ethnicity_with_missing b5.imd_with_missing i.vaccination_status covid_reinfection previous_drug i.region_covid_therapeutics ibn.interval, exposure(log_exposure) noconstant 
 estimates store poisson1
-bayes, saving(poisson2,replace): poisson _d age_spline* i.sex calendar_day_spline* solid_cancer_ever haema_disease_ever ckd_3_5 liver_disease imid immunosupression solid_organ diabetes chronic_cardiac_disease hypertension chronic_respiratory_disease b1.bmi_g4_with_missing b6.ethnicity_with_missing b5.imd_with_missing i.vaccination_status covid_reinfection previous_drug i.region_covid_therapeutics ibn.interval, exposure(log_exposure)  noconstant
+bayes, prior({_d:}, normal(0,5)) saving(poisson2,replace): poisson _d age_spline* i.sex calendar_day_spline* solid_cancer_ever haema_disease_ever ckd_3_5 liver_disease imid immunosupression solid_organ diabetes chronic_cardiac_disease hypertension chronic_respiratory_disease b1.bmi_g4_with_missing b6.ethnicity_with_missing b5.imd_with_missing i.vaccination_status covid_reinfection previous_drug i.region_covid_therapeutics ibn.interval, exposure(log_exposure)  noconstant
 estimates store poisson2
 bayesstats ic poisson2 poisson1
 matrix result = r(ic) 
