@@ -46,7 +46,7 @@ matrix result = r(ic)
 local log_BF= result[2,3]
 putexcel D32=("BF=`log_BF'")   
 
-if missing("`log_BF'")  {
+if missing("`log_BF'")|"`log_BF'"=="."   {
     display as error "error"
     exit 198
 }
