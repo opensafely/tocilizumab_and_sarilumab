@@ -3,7 +3,7 @@ from ehrql import (
     create_dataset,
     case,
     when,
-    days,
+    days, 
     minimum_of,
 )
 from ehrql.codes import CTV3Code
