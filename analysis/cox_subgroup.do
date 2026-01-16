@@ -46,28 +46,28 @@ if `e(N_fail)' <= 7 {
 else {
         local N_fail = round(`e(N_fail)',5)
     }
-count if _st==1&drug==0
+count if omicron==0&drug==0
 if r(N) <= 7 {
         local N_toci = "<=7"
     }
 else {
         local N_toci = round(r(N),5)
     }
-count if _st==1&drug==1
+count if omicron==0&drug==1
 if r(N) <= 7 {
         local N_sari = "<=7"
     }
 else {
         local N_sari = round(r(N),5)
     }
-count if _st==1&_d==1&drug==0
+count if omicron==0&_d==1&drug==0
 if r(N) <= 7 {
         local d_toci = "<=7"
     }
 else {
         local d_toci = round(r(N),5)
     }
-count if _st==1&_d==1&drug==1
+count if omicron==0&_d==1&drug==1
 if r(N) <= 7 {
         local d_sari = "<=7"
     }
@@ -95,28 +95,28 @@ if `e(N_fail)' <= 7 {
 else {
         local N_fail = round(`e(N_fail)',5)
     }
-count if _st==1&drug==0
+count if omicron==1&drug==0
 if r(N) <= 7 {
         local N_toci = "<=7"
     }
 else {
         local N_toci = round(r(N),5)
     }
-count if _st==1&drug==1
+count if omicron==1&drug==1
 if r(N) <= 7 {
         local N_sari = "<=7"
     }
 else {
         local N_sari = round(r(N),5)
     }
-count if _st==1&_d==1&drug==0
+count if omicron==1&_d==1&drug==0
 if r(N) <= 7 {
         local d_toci = "<=7"
     }
 else {
         local d_toci = round(r(N),5)
     }
-count if _st==1&_d==1&drug==1
+count if omicron==1&_d==1&drug==1
 if r(N) <= 7 {
         local d_sari = "<=7"
     }
@@ -147,28 +147,28 @@ if `e(N_fail)' <= 7 {
 else {
         local N_fail = round(`e(N_fail)',5)
     }
-count if _st==1&drug==0
+count if sex==0&drug==0
 if r(N) <= 7 {
         local N_toci = "<=7"
     }
 else {
         local N_toci = round(r(N),5)
     }
-count if _st==1&drug==1
+count if sex==0&drug==1
 if r(N) <= 7 {
         local N_sari = "<=7"
     }
 else {
         local N_sari = round(r(N),5)
     }
-count if _st==1&_d==1&drug==0
+count if sex==0&_d==1&drug==0
 if r(N) <= 7 {
         local d_toci = "<=7"
     }
 else {
         local d_toci = round(r(N),5)
     }
-count if _st==1&_d==1&drug==1
+count if sex==0&_d==1&drug==1
 if r(N) <= 7 {
         local d_sari = "<=7"
     }
@@ -194,28 +194,28 @@ if `e(N_fail)' <= 7 {
 else {
         local N_fail = round(`e(N_fail)',5)
     }
-count if _st==1&drug==0
+count if sex==1&drug==0
 if r(N) <= 7 {
         local N_toci = "<=7"
     }
 else {
         local N_toci = round(r(N),5)
     }
-count if _st==1&drug==1
+count if sex==1&drug==1
 if r(N) <= 7 {
         local N_sari = "<=7"
     }
 else {
         local N_sari = round(r(N),5)
     }
-count if _st==1&_d==1&drug==0
+count if sex==1&_d==1&drug==0
 if r(N) <= 7 {
         local d_toci = "<=7"
     }
 else {
         local d_toci = round(r(N),5)
     }
-count if _st==1&_d==1&drug==1
+count if sex==1&_d==1&drug==1
 if r(N) <= 7 {
         local d_sari = "<=7"
     }
@@ -246,28 +246,28 @@ if `e(N_fail)' <= 7 {
 else {
         local N_fail = round(`e(N_fail)',5)
     }
-count if _st==1&drug==0
+count if age_60==0&drug==0
 if r(N) <= 7 {
         local N_toci = "<=7"
     }
 else {
         local N_toci = round(r(N),5)
     }
-count if _st==1&drug==1
+count if age_60==0&drug==1
 if r(N) <= 7 {
         local N_sari = "<=7"
     }
 else {
         local N_sari = round(r(N),5)
     }
-count if _st==1&_d==1&drug==0
+count if age_60==0&_d==1&drug==0
 if r(N) <= 7 {
         local d_toci = "<=7"
     }
 else {
         local d_toci = round(r(N),5)
     }
-count if _st==1&_d==1&drug==1
+count if age_60==0&_d==1&drug==1
 if r(N) <= 7 {
         local d_sari = "<=7"
     }
@@ -293,28 +293,28 @@ if `e(N_fail)' <= 7 {
 else {
         local N_fail = round(`e(N_fail)',5)
     }
-count if _st==1&drug==0
+count if age_60==1&drug==0
 if r(N) <= 7 {
         local N_toci = "<=7"
     }
 else {
         local N_toci = round(r(N),5)
     }
-count if _st==1&drug==1
+count if age_60==1&drug==1
 if r(N) <= 7 {
         local N_sari = "<=7"
     }
 else {
         local N_sari = round(r(N),5)
     }
-count if _st==1&_d==1&drug==0
+count if age_60==1&_d==1&drug==0
 if r(N) <= 7 {
         local d_toci = "<=7"
     }
 else {
         local d_toci = round(r(N),5)
     }
-count if _st==1&_d==1&drug==1
+count if age_60==1&_d==1&drug==1
 if r(N) <= 7 {
         local d_sari = "<=7"
     }
@@ -345,28 +345,28 @@ if `e(N_fail)' <= 7 {
 else {
         local N_fail = round(`e(N_fail)',5)
     }
-count if _st==1&drug==0
+count if White==0&drug==0
 if r(N) <= 7 {
         local N_toci = "<=7"
     }
 else {
         local N_toci = round(r(N),5)
     }
-count if _st==1&drug==1
+count if White==0&drug==1
 if r(N) <= 7 {
         local N_sari = "<=7"
     }
 else {
         local N_sari = round(r(N),5)
     }
-count if _st==1&_d==1&drug==0
+count if White==0&_d==1&drug==0
 if r(N) <= 7 {
         local d_toci = "<=7"
     }
 else {
         local d_toci = round(r(N),5)
     }
-count if _st==1&_d==1&drug==1
+count if White==0&_d==1&drug==1
 if r(N) <= 7 {
         local d_sari = "<=7"
     }
@@ -392,28 +392,28 @@ if `e(N_fail)' <= 7 {
 else {
         local N_fail = round(`e(N_fail)',5)
     }
-count if _st==1&drug==0
+count if White==1&drug==0
 if r(N) <= 7 {
         local N_toci = "<=7"
     }
 else {
         local N_toci = round(r(N),5)
     }
-count if _st==1&drug==1
+count if White==1&drug==1
 if r(N) <= 7 {
         local N_sari = "<=7"
     }
 else {
         local N_sari = round(r(N),5)
     }
-count if _st==1&_d==1&drug==0
+count if White==1&_d==1&drug==0
 if r(N) <= 7 {
         local d_toci = "<=7"
     }
 else {
         local d_toci = round(r(N),5)
     }
-count if _st==1&_d==1&drug==1
+count if White==1&_d==1&drug==1
 if r(N) <= 7 {
         local d_sari = "<=7"
     }
@@ -444,28 +444,28 @@ if `e(N_fail)' <= 7 {
 else {
         local N_fail = round(`e(N_fail)',5)
     }
-count if _st==1&drug==0
+count if vaccination_0==0&drug==0
 if r(N) <= 7 {
         local N_toci = "<=7"
     }
 else {
         local N_toci = round(r(N),5)
     }
-count if _st==1&drug==1
+count if vaccination_0==0&drug==1
 if r(N) <= 7 {
         local N_sari = "<=7"
     }
 else {
         local N_sari = round(r(N),5)
     }
-count if _st==1&_d==1&drug==0
+count if vaccination_0==0&_d==1&drug==0
 if r(N) <= 7 {
         local d_toci = "<=7"
     }
 else {
         local d_toci = round(r(N),5)
     }
-count if _st==1&_d==1&drug==1
+count if vaccination_0==0&_d==1&drug==1
 if r(N) <= 7 {
         local d_sari = "<=7"
     }
@@ -491,28 +491,28 @@ if `e(N_fail)' <= 7 {
 else {
         local N_fail = round(`e(N_fail)',5)
     }
-count if _st==1&drug==0
+count if vaccination_0==1&drug==0
 if r(N) <= 7 {
         local N_toci = "<=7"
     }
 else {
         local N_toci = round(r(N),5)
     }
-count if _st==1&drug==1
+count if vaccination_0==1&drug==1
 if r(N) <= 7 {
         local N_sari = "<=7"
     }
 else {
         local N_sari = round(r(N),5)
     }
-count if _st==1&_d==1&drug==0
+count if vaccination_0==1&_d==1&drug==0
 if r(N) <= 7 {
         local d_toci = "<=7"
     }
 else {
         local d_toci = round(r(N),5)
     }
-count if _st==1&_d==1&drug==1
+count if vaccination_0==1&_d==1&drug==1
 if r(N) <= 7 {
         local d_sari = "<=7"
     }
@@ -543,28 +543,28 @@ if `e(N_fail)' <= 7 {
 else {
         local N_fail = round(`e(N_fail)',5)
     }
-count if _st==1&drug==0
+count if bmi_30==0&drug==0
 if r(N) <= 7 {
         local N_toci = "<=7"
     }
 else {
         local N_toci = round(r(N),5)
     }
-count if _st==1&drug==1
+count if bmi_30==0&drug==1
 if r(N) <= 7 {
         local N_sari = "<=7"
     }
 else {
         local N_sari = round(r(N),5)
     }
-count if _st==1&_d==1&drug==0
+count if bmi_30==0&_d==1&drug==0
 if r(N) <= 7 {
         local d_toci = "<=7"
     }
 else {
         local d_toci = round(r(N),5)
     }
-count if _st==1&_d==1&drug==1
+count if bmi_30==0&_d==1&drug==1
 if r(N) <= 7 {
         local d_sari = "<=7"
     }
@@ -590,28 +590,28 @@ if `e(N_fail)' <= 7 {
 else {
         local N_fail = round(`e(N_fail)',5)
     }
-count if _st==1&drug==0
+count if bmi_30==1&drug==0
 if r(N) <= 7 {
         local N_toci = "<=7"
     }
 else {
         local N_toci = round(r(N),5)
     }
-count if _st==1&drug==1
+count if bmi_30==1&drug==1
 if r(N) <= 7 {
         local N_sari = "<=7"
     }
 else {
         local N_sari = round(r(N),5)
     }
-count if _st==1&_d==1&drug==0
+count if bmi_30==1&_d==1&drug==0
 if r(N) <= 7 {
         local d_toci = "<=7"
     }
 else {
         local d_toci = round(r(N),5)
     }
-count if _st==1&_d==1&drug==1
+count if bmi_30==1&_d==1&drug==1
 if r(N) <= 7 {
         local d_sari = "<=7"
     }
@@ -647,28 +647,28 @@ if `e(N_fail)' <= 7 {
 else {
         local N_fail = round(`e(N_fail)',5)
     }
-count if _st==1&drug==0
+count if `var'==0&drug==0
 if r(N) <= 7 {
         local N_toci = "<=7"
     }
 else {
         local N_toci = round(r(N),5)
     }
-count if _st==1&drug==1
+count if `var'==0&drug==1
 if r(N) <= 7 {
         local N_sari = "<=7"
     }
 else {
         local N_sari = round(r(N),5)
     }
-count if _st==1&_d==1&drug==0
+count if `var'==0&_d==1&drug==0
 if r(N) <= 7 {
         local d_toci = "<=7"
     }
 else {
         local d_toci = round(r(N),5)
     }
-count if _st==1&_d==1&drug==1
+count if `var'==0&_d==1&drug==1
 if r(N) <= 7 {
         local d_sari = "<=7"
     }
@@ -696,28 +696,28 @@ if `e(N_fail)' <= 7 {
 else {
         local N_fail = round(`e(N_fail)',5)
     }
-count if _st==1&drug==0
+count if `var'==1&drug==0
 if r(N) <= 7 {
         local N_toci = "<=7"
     }
 else {
         local N_toci = round(r(N),5)
     }
-count if _st==1&drug==1
+count if `var'==1&drug==1
 if r(N) <= 7 {
         local N_sari = "<=7"
     }
 else {
         local N_sari = round(r(N),5)
     }
-count if _st==1&_d==1&drug==0
+count if `var'==1&_d==1&drug==0
 if r(N) <= 7 {
         local d_toci = "<=7"
     }
 else {
         local d_toci = round(r(N),5)
     }
-count if _st==1&_d==1&drug==1
+count if `var'==1&_d==1&drug==1
 if r(N) <= 7 {
         local d_sari = "<=7"
     }
