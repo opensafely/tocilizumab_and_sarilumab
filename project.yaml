@@ -17,7 +17,8 @@ actions:
       moderately_sensitive:
         log: logs/data_preparation.log
         output: output/descriptives.csv
-        
+        output2: output/descriptives2.csv
+
   cox_regression:
     run: stata-mp:latest analysis/cox.do
     needs: [data_preparation]
