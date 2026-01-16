@@ -306,7 +306,7 @@ gen calendar_month=ceil((start_date-mdy(7,1,2021))/30)
 tab calendar_month,m
 gen omicron=(start_date>=mdy(12,6,2021))
 tab omicron,m
-
+gen 
 
 
 
@@ -393,7 +393,38 @@ local upper_ci = exp(b[1,1] + 1.96 * `drug_se')
 local p=2 * (1 - normal(abs(b[1,1]/`drug_se')))
 putexcel A`row' = "HR"  B`row'="`drug_coef' (`lower_ci'-`upper_ci')"  C`row'="`p'"
 
-  
+
+*counts by calendar month*
+putexcel set "./output/descriptives2.xlsx", replace
+putexcel A1=("Variable") B1=("tocilizumab") C1=("sarilumab") D1=("total") 
+
+tab calendar_month drug , matcell(freq) matrow(labels)
+putexcel A2 = "calendar_month"  
+local row = 2
+forval i = 1/`=rowsof(freq)' {
+	if freq[`i',1] <= 7 {
+        local result = "<=7"
+    }
+    else {
+        local result = round(freq[`i',1],5)
+    }
+    putexcel     B`row' =  "`result'"
+	if freq[`i',2] <= 7 {
+        local result = "<=7"
+    }
+    else {
+        local result = round(freq[`i',2],5)
+    }	
+    putexcel     C`row' = "`result'"
+	if freq[`i',1]+freq[`i',2] <= 7 {
+        local result = "<=7"
+    }
+    else {
+        local result = round(freq[`i',1]+freq[`i',2],5)
+    }		
+	putexcel 	D`row' = "`result'"
+    local row = `row' + 1
+}
 
 save ./output/main.dta, replace
 
@@ -401,6 +432,9 @@ clear
 import excel ./output/descriptives.xlsx, sheet("Sheet1") firstrow
 export delimited using ./output/descriptives.csv, replace
 
+clear
+import excel ./output/descriptives2.xlsx, sheet("Sheet1") firstrow
+export delimited using ./output/descriptives2.csv, replace
 
 log close
 
