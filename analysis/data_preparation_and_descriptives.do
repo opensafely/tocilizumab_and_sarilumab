@@ -306,7 +306,6 @@ gen calendar_month=ceil((start_date-mdy(7,1,2021))/30)
 tab calendar_month,m
 gen omicron=(start_date>=mdy(12,6,2021))
 tab omicron,m
-gen 
 
 
 
