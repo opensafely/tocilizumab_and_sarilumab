@@ -62,5 +62,10 @@ actions:
         log: logs/psw_check.log
         output: output/psw_check.csv
 
-
+  km_plot:
+    run: r:latest analysis/plot.R
+    needs: [data_preparation]
+    outputs:
+      moderately_sensitive:
+        output: output/km_plot.svg
 
