@@ -6,17 +6,26 @@ library(tidyverse)
 
 df <- read_dta("./output/main.dta")
 
+if(is.numeric(df$drug)) {
+  df$drug <- as.factor(df$drug)
+}
+
 df <- df %>%
   mutate(
     end_date = as.Date(end_date),
     start_date = as.Date(start_date),
+    time  = as.numeric(end_date - start_date),
+    event = failure == 1,
+    drug = factor(drug, 
+                  levels = c(0, 1), 
+                  labels = c("tocilizumab", "sarilumab"))
   )
+
+
 
 #by drug #
 km_raw <- survfit(
-  Surv(time = df$start_date, 
-       time2 = df$end_date, 
-       event = df$failure == 1) ~ drug,
+  Surv(time, event ) ~ drug,
   data = df
 )
 threshold <- 10
@@ -40,21 +49,25 @@ plot(
   0, 0,
   type = "n",
   xlim = range(km_min10$time),
-  ylim = c(0, 1),
-  xlab = "Time",
-  ylab = "Survival"
+  ylim = c(0, 1.05),
+  xlab = "Time (days)",
+  ylab = "Survival Probability"
 )
 
-for (s in unique(km_min10$strata)) {
+linetypes <- 1:2
+strata_list <- unique(km_min10$strata)
+
+for (i in seq_along(strata_list)) {
+  s <- strata_list[i]
   d <- km_min10[km_min10$strata == s, ]
-  lines(d$time, d$surv, type = "s")
+  d <- d[order(d$time), ]
+  lines(d$time, d$surv, type = "s",lty = linetypes[i])
 }
 
-legend(
-  "topright",
-  legend = unique(km_min10$strata),
-  lty = 1
-)
+legend_labels <- gsub("drug=", "", unique(km_min10$strata))
+legend("topright", legend = legend_labels,
+       lty = linetypes, lwd = 2,
+       title = "Drug", bty = "n")
 
 dev.off()
 
