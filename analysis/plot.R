@@ -36,53 +36,6 @@ km_df <- data.frame(
 unique_strata <- unique(km_df$strata)
 result_list <- list()
 
-for(stratum in unique_strata) {
-  sub_df <- km_df[km_df$strata == stratum, ]
-  
-  sub_df <- sub_df[order(sub_df$time), ]
-  
-  N <- max(sub_df$n.risk)
-  
-  cml_event <- cumsum(sub_df$n.event)
-  
-  cml_event_floor <- floor(cml_event / threshold) * threshold
-  
-  n_event_new <- numeric(length(cml_event_floor))
-  n_event_new[1] <- cml_event_floor[1]
-  if(length(cml_event_floor) > 1) {
-    n_event_new[2:length(cml_event_floor)] <- 
-      cml_event_floor[2:length(cml_event_floor)] - 
-      cml_event_floor[1:(length(cml_event_floor)-1)]
-  }
-  
-  n_event_new <- pmax(n_event_new, 0)
-  
-  cum_loss <- cumsum(n_event_new + sub_df$n.censor)
-  
-  n_risk_new <- numeric(length(cum_loss))
-  n_risk_new[1] <- N
-  if(length(cum_loss) > 1) {
-    n_risk_new[2:length(cum_loss)] <- N - cum_loss[1:(length(cum_loss)-1)]
-  }
-  n_risk_new <- pmax(n_risk_new, 1)
-  
-  surv_new <- cumprod(1 - n_event_new / n_risk_new)
-  
-  result_df <- data.frame(
-    strata = stratum,
-    time = sub_df$time,
-    n.risk = n_risk_new,
-    n.event = n_event_new,
-    n.censor = sub_df$n.censor,
-    surv = surv_new,
-    stringsAsFactors = FALSE
-  )
-  
-  result_list[[stratum]] <- result_df
-}
-
-km_min10 <- do.call(rbind, result_list)
-rownames(km_min10) <- NULL
 
 
 svg("./output/km_plot.svg", width = 8, height = 6)
