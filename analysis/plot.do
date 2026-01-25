@@ -56,6 +56,18 @@ graph twoway ///
     
 graph export ./output/km_threshold.svg, as(svg) replace
 
+clear
+
+use ./output/main.dta
+
+stset end_date ,  origin(start_date) failure(failure==1)
+keep if _st==1
+stcox drug age_spline* i.sex calendar_day_spline* solid_cancer_ever haema_disease_ever ckd_3_5 liver_disease imid immunosupression solid_organ diabetes chronic_cardiac_disease hypertension chronic_respiratory_disease b1.bmi_g4_with_missing b6.ethnicity_with_missing b5.imd_with_missing i.vaccination_status covid_reinfection previous_drug, strata(region_covid_therapeutics)
+
+estat phtest, plot(drug) msymbol(none) mcolor(none)  msize(zero)
+graph export ./output/phtest_noscatter.svg, as(svg) replace
+
+
 log close
 
 
