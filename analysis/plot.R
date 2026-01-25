@@ -2,7 +2,6 @@ library(survival)
 library(dplyr)
 library(broom)
 library(haven)
-library(tidyverse)
 library(tidyr)
 
 df <- read_dta("./output/main.dta")
@@ -31,36 +30,25 @@ km_raw <- survfit(
 )
 threshold <- 10
 
-km_sum <- summary(km_raw)
-
-km_df <- data.frame(
-  strata   = km_sum$strata,
-  time     = km_sum$time,
-  n.risk   = km_sum$n.risk,
-  n.event  = km_sum$n.event,
-  n.censor = km_sum$n.censor,
-  surv     = km_sum$surv
-)
-
-
-km_min10 <- km_df |>
+km_min10 <- broom::tidy(km_raw) |>
   group_by(strata) |>
   mutate(
-    N = max(n.risk, na.rm=TRUE),
-    cml.event = plyr::round_any(cumsum(replace_na(n.event, 0)), threshold),
-    cml.censor = plyr::round_any(cumsum(replace_na(n.censor, 0)), threshold),
-    n.event = diff(c(0,cml.event)),
-    n.censor = diff(c(0,cml.censor)),
-    n.risk = plyr::round_any(N, threshold) - lag(cml.event + cml.censor,1,0),
-    summand = n.event / ((n.risk - n.event) * n.risk),
-    
-    ## calculate surv based on rounded event counts
-    surv = cumprod(1 - n.event / n.risk)
+    N = max(n.risk),
+    cml_event = cumsum(n.event),
+    cml_event = floor(cml_event / threshold) * threshold,
+    n.event   = c(cml_event[1], diff(cml_event)),
+    n.event = pmax(n.event, 0)
+  ) |>
+  mutate(
+    n.risk = N - lag(cumsum(n.event + n.censor), default = 0),
+    n.risk = pmax(n.risk, 1),
+    surv   = cumprod(1 - n.event / n.risk)
   ) |>
   ungroup()
 
+
 svg("./output/km_plot.svg", width = 8, height = 6)
 
+
+
 dev.off()
-
-
