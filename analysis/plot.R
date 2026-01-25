@@ -1,50 +1,88 @@
 library(survival)
-library(dplyr)
-library(broom)
 library(haven)
-library(tidyr)
+
 
 df <- read_dta("./output/main.dta")
 
 if(is.numeric(df$drug)) {
-  df$drug <- as.factor(df$drug)
+  df$drug <- factor(df$drug, levels = c(0, 1), 
+                    labels = c("tocilizumab", "sarilumab"))
+} else {
+  df$drug <- factor(df$drug)
 }
 
-df <- df %>%
-  mutate(
-    end_date = as.Date(end_date),
-    start_date = as.Date(start_date),
-    time  = as.numeric(end_date - start_date),
-    event = failure == 1,
-    drug = factor(drug, 
-                  levels = c(0, 1), 
-                  labels = c("tocilizumab", "sarilumab"))
-  )
+df$end_date <- as.Date(df$end_date)
+df$start_date <- as.Date(df$start_date)
 
-
+df$time <- as.numeric(df$end_date - df$start_date)
+df$event <- df$failure == 1  
 
 #by drug #
-km_raw <- survfit(
-  Surv(time, event ) ~ drug,
-  data = df
-)
+km_raw <- survfit(Surv(time, event) ~ drug, data = df)
 threshold <- 10
 
-km_min10 <- broom::tidy(km_raw) |>
-  group_by(strata) |>
-  mutate(
-    N = max(n.risk),
-    cml_event = cumsum(n.event),
-    cml_event = floor(cml_event / threshold) * threshold,
-    n.event   = c(cml_event[1], diff(cml_event)),
-    n.event = pmax(n.event, 0)
-  ) |>
-  mutate(
-    n.risk = N - lag(cumsum(n.event + n.censor), default = 0),
-    n.risk = pmax(n.risk, 1),
-    surv   = cumprod(1 - n.event / n.risk)
-  ) |>
-  ungroup()
+km_summary <- summary(km_raw)
+
+km_df <- data.frame(
+  strata = km_summary$strata,
+  time = km_summary$time,
+  n.risk = km_summary$n.risk,
+  n.event = km_summary$n.event,
+  n.censor = km_summary$n.censor,
+  surv = km_summary$surv,
+  stringsAsFactors = FALSE
+)
+
+unique_strata <- unique(km_df$strata)
+result_list <- list()
+
+for(stratum in unique_strata) {
+  sub_df <- km_df[km_df$strata == stratum, ]
+  
+  sub_df <- sub_df[order(sub_df$time), ]
+  
+  N <- max(sub_df$n.risk)
+  
+  cml_event <- cumsum(sub_df$n.event)
+  
+  cml_event_floor <- floor(cml_event / threshold) * threshold
+  
+  n_event_new <- numeric(length(cml_event_floor))
+  n_event_new[1] <- cml_event_floor[1]
+  if(length(cml_event_floor) > 1) {
+    n_event_new[2:length(cml_event_floor)] <- 
+      cml_event_floor[2:length(cml_event_floor)] - 
+      cml_event_floor[1:(length(cml_event_floor)-1)]
+  }
+  
+  n_event_new <- pmax(n_event_new, 0)
+  
+  cum_loss <- cumsum(n_event_new + sub_df$n.censor)
+  
+  n_risk_new <- numeric(length(cum_loss))
+  n_risk_new[1] <- N
+  if(length(cum_loss) > 1) {
+    n_risk_new[2:length(cum_loss)] <- N - cum_loss[1:(length(cum_loss)-1)]
+  }
+  n_risk_new <- pmax(n_risk_new, 1)
+  
+  surv_new <- cumprod(1 - n_event_new / n_risk_new)
+  
+  result_df <- data.frame(
+    strata = stratum,
+    time = sub_df$time,
+    n.risk = n_risk_new,
+    n.event = n_event_new,
+    n.censor = sub_df$n.censor,
+    surv = surv_new,
+    stringsAsFactors = FALSE
+  )
+  
+  result_list[[stratum]] <- result_df
+}
+
+km_min10 <- do.call(rbind, result_list)
+rownames(km_min10) <- NULL
 
 
 svg("./output/km_plot.svg", width = 8, height = 6)
