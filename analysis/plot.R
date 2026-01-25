@@ -4,12 +4,9 @@ library(haven)
 
 df <- read_dta("./output/main.dta")
 
-if(is.numeric(df$drug)) {
-  df$drug <- factor(df$drug, levels = c(0, 1), 
+df$drug <- factor(df$drug, levels = c(0, 1), 
                     labels = c("tocilizumab", "sarilumab"))
-} else {
-  df$drug <- factor(df$drug)
-}
+
 
 df$end_date <- as.Date(df$end_date)
 df$start_date <- as.Date(df$start_date)
