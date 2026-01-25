@@ -63,9 +63,10 @@ actions:
         output: output/psw_check.csv
 
   km_plot:
-    run: r:latest analysis/plot.R
+    run: stata-mp:latest analysis/plot.do
     needs: [data_preparation]
     outputs:
       moderately_sensitive:
-        output: output/km_plot.svg
+        log: logs/plot.log
+        output: output/km_threshold.svg
 
