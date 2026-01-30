@@ -56,6 +56,9 @@ graph twoway ///
     
 graph export ./output/km_threshold.svg, as(svg) replace
 
+keep drug time cml_event_floor surv_new
+export delimited using ./output/km_processed.csv, replace
+
 clear
 
 use ./output/main.dta
