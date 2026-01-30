@@ -70,3 +70,4 @@ actions:
         log: logs/plot.log
         output: output/km_threshold.svg
         output2: output/phtest_noscatter.svg
+        output3: output/km_processed.csv
